@@ -15,12 +15,8 @@ from hashTable import PackageHashTable
 class Graph:
     def __init__(self):
         print("made it")
-    # def addVertex(self, new_vertex):
-#     self.adjacencyList[new_vertex] =[]
-# def addWeight(self, vertex1, vertex2, weight):
-#     self.weightList[(vertex1, vertex2)] = weight
-#     return
 
+#takes in the hash table, a matrix with my distances, a dictionary full of keys by address, and the truck with packages
     def deliverPackage(self, hashTable=[], edgeMatrix=[], edgeDictionary={}, truck=[]):
         self.hashTable = hashTable
         self.truck = truck
@@ -29,46 +25,85 @@ class Graph:
 
         start = '4001 South 700 East'
         minDistance = 20.0
-        mileCounter = 0
+        mileCounter = 0.0
         rowList = list(edgeDictionary.keys())
-
+        row = 0
+        visitedLoc = []
+        prevMinDist = 0.0
 
 
         while len(truck) != 0:
-            #shows all the edges for that key
-            valueList = edgeDictionary.get(start)
-            #converts all the edges to a float value
-            valueList = list(map(float, valueList))
-            #traverses through the edges
-            
-            for i in valueList:
-                #if a new mindistance is found and its not 0 it sets new mindistance
-                if i < minDistance and i != 0.0:
-                 minDistance = i
+            for i in edgeMatrix[row]:
+
+                if (float(i) == prevMinDist or edgeMatrix[row].index(i) in visitedLoc):
+                    continue
+
+                if (float(i) < minDistance and float(i) != 0.0):
+                    minDistance = float(i)
+                    j = edgeMatrix[row].index(i)
+                    print(minDistance)
 
 
 
-            #traverses through each value in the truck list
-            for i in truck:
-                #if key(package id) address matches the start address then it removes the index
-                if hashTable.search(i).address == start:
-                    truck.remove(i)
+            #print("row after min loop", row)
+            #print("mindistance", minDistance)
 
-                    print("removed package", i)
 
-                    #break
+            for k in truck:
 
-            #print("truck for loop ended")
+                print(minDistance)
+                if hashTable.search(k).address == rowList[row]:
 
-            #rowlist is list of all the keys
-            #The new start is created with i #####keysList[value list index where minDistance value is at]
+                    #print("made truck loop")
+                    print("package ", k, " delivered!")
 
-            start = rowList[valueList.index(minDistance)]
 
+                    truck.remove(k)
+
+
+
+            if len(truck) == 0:
+                    break
+
+
+
+            print(mileCounter)
+            mileCounter += minDistance
+            print(mileCounter)
+            visitedLoc.append(row)
+            row = j
+            prevMinDist = minDistance
             minDistance = 20.0
 
 
-        return print("function ended")
+
+
+
+
+        return print("Packages delivered in ", mileCounter, " miles")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
