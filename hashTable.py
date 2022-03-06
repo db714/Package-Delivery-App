@@ -1,3 +1,6 @@
+#DSA2 Project
+#hashTable.py
+#David Brown (001313638)
 #from graphFile import Graph
 class PackageHashTable:
 

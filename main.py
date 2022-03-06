@@ -1,4 +1,6 @@
 #DSA2 Project
+#main.py
+#David Brown (001313638)
 from graphFile import Graph
 from hashTable import PackageHashTable
 import csv
@@ -6,20 +8,9 @@ from value import Value
 from datetime import datetime, timedelta
 #from graph import Vertex
 
-# go = timedelta(minutes=5)
-# go += timedelta(minutes=65)
-#
-# print(go)
-# eliveryTime = datetime.timedelta(hours=0, minutes=0, seconds=0)
-# print(eliveryTime)
+
 deliveryTime = timedelta(hours=0, minutes=0)
-# print(deliveryTime)
-# distance = 45.78/18
-# print(distance)
-# h = slice(1)
-# print(str(distance)[h])
-# # deliveryTime = deliveryTime + timedelta(hours=2)
-# # print(deliveryTime)
+
 
 hash_table = PackageHashTable(40)
 
@@ -49,16 +40,19 @@ with open("package_file.csv") as pf:
         deadline = row[5]
         weight = row[6]
         note = row[7]
+        departTime = None
         dStatus = "At the Hub"
+        dTime = None
 
-        #value = [pID, address, city, state, zip, deadline, weight, note]
-        value = Value(pID, address, city, state, zip, deadline, weight, note, dStatus)
+
+        value = Value(pID, address, city, state, zip, deadline, weight, note, departTime, dStatus, dTime)
 
         hash_table.insert(i, value)
         i +=1
 
 
-
+print(type(departTime))
+print(type(dTime))
 
 
 
@@ -75,14 +69,13 @@ edgeMatrix = []
 edgeDictionary = {}
 
 
-
+#Read the distance csv file and store values in a matrix
 with open("distance_file.csv") as df:
 
     csv_reader = csv.reader(df, delimiter=',')
 
 
-    ####if value is null or value == none then next again
-    ####the alternative would be at the end of the for loop add another next since you know that its uniform
+
     next(csv_reader, None)
     next(csv_reader, None)
     next(csv_reader, None)
@@ -117,42 +110,28 @@ with open("distance_file.csv") as df:
 #Creating/Loading each truck
 #Truck 1 is early morning
 Truck1 = [15, 14, 19, 16, 37, 13, 20, 1, 29, 30, 31, 34, 5, 40, 2, 4]
+for i in Truck1:
+    hash_table.search(i).departTime = timedelta(hours=8)
 
 #Truck 2 is arrival after 9
 Truck2 = [36, 38, 18, 3, 6, 28, 32, 7, 8, 10, 11, 12, 17, 25, 21, 22]
+for i in Truck2:
+    hash_table.search(i).departTime = timedelta(hours=9, minutes=5)
 
 #Truck 3 is wrong address and left overs
 Truck3 = [9, 35, 23, 24, 26, 33, 27, 39]
-
-
-
-
+for i in Truck3:
+    hash_table.search(i).departTime = timedelta(hours=10, minutes=20)
 
 
 
 
 
 g = Graph()
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck1)
-#You could traverse through the truck and set all of the times to 8:00
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck2)
-#You could traverse through the truck and set all of the times to 9:05
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck3)
-#You could traverse through the truck and set all of the times to 10:20
 
 
 
 
-
-
-# Truck4 = [6, 25, 17, 32, 28, 39, 33, 26, 23]
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck4)
-# Truck5 = [13, 14, 15, 19, 16, 20, 29, 30, 31, 34, 37, 40, 1, 12, 22, 24]
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck5)
-# Truck6 = [5, 3, 18, 36, 38, 8, 2, 4, 27, 10, 11, 9, 7, 21, 35]
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck6)
-# Truck7 = [23, 15, 10]
-#g.deliverPackage(hash_table, edgeMatrix, edgeDictionary, Truck7)
 
 
 
@@ -169,21 +148,44 @@ if __name__ == '__main__':
         print("2: Deliver Truck 1")
         print("3: Deliver Truck 2")
         print("4: Deliver Truck 3")
-        print("5: Exit Program")
-        option = input("Choose an option (1,2,3,4 or 5): ")
+        print("5: Delivery Status by Time")
+        print("6: Exit Program")
+        option = input("Choose an option (1,2,3,4,5 or 6): ")
         if option == "1":
             for i in range(1, 41):
                 print(hash_table.search(i))
         elif option == "2":
+            for i in Truck1:
+                hash_table.search(i).dStatus = "En Route"
             deliveryTime = timedelta(hours=8, minutes=0)
             g.deliverPackage(deliveryTime, hash_table, edgeMatrix, edgeDictionary, Truck1)
         elif option == "3":
+            for i in Truck2:
+                hash_table.search(i).dStatus = "En Route"
             deliveryTime = timedelta(hours=9, minutes=5)
             g.deliverPackage(deliveryTime, hash_table, edgeMatrix, edgeDictionary, Truck2)
         elif option == "4":
+            for i in Truck3:
+                hash_table.search(i).dStatus = "En Route"
             deliveryTime = timedelta(hours=10, minutes=20)
             g.deliverPackage(deliveryTime, hash_table, edgeMatrix, edgeDictionary, Truck3)
         elif option == "5":
+            time = input("Please input a time(X:XX): ")
+
+            timeList = time.split(':')
+            tH = int(timeList[0])
+            tM = int(timeList[1])
+            print(timeList)
+            print(tH)
+            print(tM)
+            for i in range(1, 41):
+                if hash_table.search(i).departTime < timedelta(hours=tH, minutes=tM) < hash_table.search(i).dTime:
+                    hash_table.search(i).dStatus = "En Route"
+                if timedelta(hours=tH, minutes=tM) < hash_table.search(i).departTime:
+                    hash_table.search(i).dStatus = "At the Hub"
+                print(hash_table.search(i))
+
+        elif option == "6":
             isExit = False
             print("Goodbye")
         else:

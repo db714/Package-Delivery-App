@@ -1,16 +1,10 @@
+#DSA2 Project
+#graphFile.py
+#David Brown (001313638)
 from hashTable import PackageHashTable
 #from main import hash_table
 from value import Value
 from datetime import datetime, timedelta
-
-# class Vertex:
-#     def __init__(self, address):
-#         self.address = address
-#
-#     def __str__(self):
-#         return "%s" % self.address
-
-
 
 
 class Graph:
@@ -35,6 +29,9 @@ class Graph:
         prevMinDist = 0.0
         currLocation = rowList[0]
 
+#The algorithm uses the addresses of the packages in the truck and finds the minimum distance from the current location.
+#Once it reaches the destination it removes the package from the truck, updates the milecounter, updates the delivery
+#status of that package, and moves to the next location until the truck is empty.
         while len(truck) != 0:
             for package in truck:
                 i = rowList.index(currLocation)
@@ -44,9 +41,6 @@ class Graph:
                     minDistance = float(edgeMatrix[i][j])
                     nxtLocation = rowList[j]
 
-                    # print(minDistance)
-                    # print(j)
-                    ##print(nxtLocation)
 
             currLocation = nxtLocation
 
@@ -55,9 +49,8 @@ class Graph:
                 if currLocation == hashTable.search(package).address:
 
                     timeToDeliver = minDistance/.3
-                    #timeToDeliver = mileCounter/.3
-                    #deliveryTime += timedelta(minutes=int(timeToDeliver))
-                    hashTable.search(package).dStatus = "Delivered " + str(deliveryTime)
+                    hashTable.search(package).dStatus = "Delivered "
+                    hashTable.search(package).dTime = deliveryTime
                     truck.remove(package)
 
             deliveryTime += timedelta(minutes=timeToDeliver)
@@ -66,44 +59,7 @@ class Graph:
             mileCounter += minDistance
             minDistance = 20.0
 
-            # for i in edgeMatrix[row]:
-            #
-            #     if (float(i) == prevMinDist or edgeMatrix[row].index(i) in visitedLoc):
-            #         continue
-            #
-            #     if (float(i) < minDistance and float(i) != 0.0):
-            #         minDistance = float(i)
-            #         j = edgeMatrix[row].index(i)
-            #         print(minDistance)
 
-            # print("row after min loop", row)
-            # print("mindistance", minDistance)
-
-            # for k in truck:
-            #
-            #     print(minDistance)
-            #     if hashTable.search(k).address == rowList[row]:
-            #
-            #         #print("made truck loop")
-            #         print("package ", k, " delivered!")
-            #
-            #
-            #         truck.remove(k)
-            #
-            #
-            #
-            # if len(truck) == 0:
-            #         break
-            #
-            #
-            #
-            # print(mileCounter)
-            # mileCounter += minDistance
-            # print(mileCounter)
-            # visitedLoc.append(row)
-            # row = j
-            # prevMinDist = minDistance
-            # minDistance = 20.0
 
         return print("Packages delivered in ", mileCounter, " miles")
 
