@@ -1,6 +1,9 @@
 #DSA2 Project
 #main.py
 #David Brown (001313638)
+#This project was created using JetBrains PyCharm (v.2021.3.2)
+#Python 3.10 was used for this project
+#The project was created using a Windows desktop SPECS:(Ryzen 3600, 16GB RAM, GeForce RTX 2070 Super)
 from graphFile import Graph
 from hashTable import PackageHashTable
 import csv
@@ -70,6 +73,8 @@ edgeDictionary = {}
 
 
 #Read the distance csv file and store values in a matrix
+#Scalability/Adaptability for additional addresses would stay O(n^2) because each new address requires both a new row and column
+# for the matrix.  If traversal through the entire matrix was required then the runtime would be O(n^2)
 with open("distance_file.csv") as df:
 
     csv_reader = csv.reader(df, delimiter=',')
@@ -108,6 +113,8 @@ with open("distance_file.csv") as df:
 
 
 #Creating/Loading each truck
+#Scalabilty/Adaptability on space/time if there were more trucks then each list size would require more space/time
+#to traverse through(O(n)).
 #Truck 1 is early morning
 Truck1 = [15, 14, 19, 16, 37, 13, 20, 1, 29, 30, 31, 34, 5, 40, 2, 4]
 for i in Truck1:

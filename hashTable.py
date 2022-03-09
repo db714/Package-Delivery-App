@@ -12,7 +12,9 @@ class PackageHashTable:
         for i in range(size):
             self.table.append([])
 
-#Inserting/updating entries into HashTable
+#Inserting/updating entries into HashTable. Hashtable has a space complexity of O(n)
+#As long as number of keys needed are known beforehand the scalabilty/adaptability of the hashtable can grow as much as
+#needed.
     def insert(self, key, val):
         bucket = hash(key) % len(self.table)
 
@@ -27,7 +29,8 @@ class PackageHashTable:
         bucket_list.append(key_value)
         return True
 
-#Searching for entries in HashTable
+#Searching for entries in HashTable. Search function has time Big O time of O(1). Even as the table grows the efficiency
+# of the runtime stays the same.
     def search(self, key):
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
